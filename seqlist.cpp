@@ -2,13 +2,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-/* run this program using the console pauser or add your own getch, system("pause") or input loop */
 #define MAXSIZE  20
 #define SIZE  10
-#define ERROR -1
 typedef int ElementType;
-typedef struct LNode * List;
-
+typedef struct LNode* List;
 
 struct LNode {
 	ElementType data[MAXSIZE];
@@ -16,108 +13,115 @@ struct LNode {
 };
 
 List makeEmpty();
-ElementType findKth(List list, int i );
-int find(List list, ElementType X );
+ElementType findKth(List list, int i);
+int find(List list, ElementType X);
 bool insert(List list, ElementType X, int i);
 bool deleted(List list, int i);
-int length( List list );
-void printfList(List list);
+int length(List list);
+void printList(List list);
 
-struct LNode * makeEmpty() {
-	struct LNode * list;
-	list=(struct LNode *)malloc(sizeof(struct LNode));
-	list->last=-1;
+List makeEmpty() {
+	List list = (List)malloc(sizeof(struct LNode));
+	list->last = -1;
 	return list;
 }
-//²éÕÒË³Ğò±íÖĞµÚi¸öÔªËØ
 
-ElementType findKth(List list, int i ) {
-	//TODO
-ElementType p=0;
-while(p<=list->last&&list->data[p]!=i)
-i++;
-return p; 
+ElementType findKth(List list, int i) {
+	if (i < 1 || i > list->last + 1) {
+		return -1; // å¤„ç†æ— æ•ˆçš„ç´¢å¼•ï¼Œè¿”å›é”™è¯¯å€¼
+	}
+	else {
+		return list->data[i - 1];
+	}
 }
 
-
-//²éÕÒÄ³¸öÔªËØxÊÇ·ñÔÚË³Ğò±íÀï£¬ÔÚµÄ»°·µ»ØĞòºÅ£¬²»ÔÚ·µ»Ø-1
-
-int find(List list, ElementType x) {
-	//TODO
-ElementType p=0;
-while(p<=list->last&&list->data[p]!=x)
-x++;
-if(p>list->last)
-return ERROR;
-else
-return p;
+int find(List list, ElementType X) {
+	for (int i = 0; i <= list->last; i++) {
+		if (list->data[i] == X) {
+			return i + 1; // ç´¢å¼•ä» 1 å¼€å§‹
+		}
+	}
+	return -1; // æœªæ‰¾åˆ°å…ƒç´ 
 }
 
-//ÔÚË³Ğò±íµÄµÚi¸öÎ»ÖÃ²åÈëÄ³Ò»¸öÔªËØX£»
-bool insert(List list, ElementType x, int i) {
-	//TODO
-ElementType j;
-if(list->last==MAXSIZE-1)
-{
-	printf("±íÂú");
-	return false; 
-}
-if(i<1||i>list->last+2)
-{
-	printf("Î»Ğò²»ºÏ·¨");
-	return false; 
-}
-for(j=list->last;j>=i-1;j--)
-	list->data[j+1]=list->data[j];
-	list->data[i-1]=x;
+bool insert(List list, ElementType X, int i) {
+	if (list->last == MAXSIZE - 1 || i < 1 || i > list->last + 2) {
+		return false; // å¤„ç†æº¢å‡ºæˆ–æ— æ•ˆçš„ç´¢å¼•
+	}
+
+	for (int j = list->last; j >= i - 1; j--) {
+		list->data[j + 1] = list->data[j];
+	}
+
+	list->data[i - 1] = X;
 	list->last++;
 	return true;
 }
-//É¾³ıË³Ğò±íÖĞµÚi¸öÔªËØ
-bool deleted(List list, int  i) {
-	//TODO
-ElementType j;
-if(i<1||i>list->last+1)
-{
-printf("Î»Ğò%d²»´æÔÚÔªËØ",i);
-return false;	
+
+bool deleted(List list, int i) {
+	if (i < 1 || i > list->last + 1) {
+		return false; // å¤„ç†æ— æ•ˆçš„ç´¢å¼•
+	}
+
+	for (int j = i; j <= list->last; j++) {
+		list->data[j - 1] = list->data[j];
+	}
+
+	list->last--;
+	return true;
 }
-for(j=i;j<=list->last;j++)
-list->data[j-1]=list->data[j];
-list->last--;
-return true; 
+
+int length(List list) {
+	return list->last + 1;
 }
-void printfList(List list) {
-	int i=0;
-	while(i<=list->last) {
-		printf("%d\t",list->data[i]);
+
+void printList(List list) {
+	int i = 0;
+	while (i <= list->last) {
+		printf("%d ", list->data[i]);
 		i++;
 	}
-}
-int length( List list ) {
-	return list->last+1;
-}
-int main(int argc, char *argv[]) {
-	int test[]= {1,2,3,4,5,6,7,8,9,10};
-	int i;
-	List list=makeEmpty();
-	for(i=0; i<SIZE; i++) {
-		insert(list,test[i],i+1);
-	}
-	printfList(list);
 	printf("\n");
-	printf("Ë³Ğò±íµÄ³¤¶È£º%d\n",length(list));
-	printf("ÇëÊäÈëÒªÉ¾³ıµÄĞòºÅ(´Ó0¿ªÊ¼)£º");
-	int h;
-	scanf("%d\n",&h);
-	deleted(list,h);
-	printf("É¾³ıÑ§ºÅ%dÖ®ºóµÄË³Ğò±íµÄÔªËØ£º\n");
-	printfList(list);
-	printf("Ë³Ğò±íµÄ³¤¶È£º%d\n",length(list));
-	printf("ÇëÊäÈëÁ½¸öÖµ£¨µÚÒ»¸öÎªĞòºÅ£¬µÚ¶ş¸öÎª²åÈëµÄ¾ßÌåÖµ£©\n");
-	int e,f;
-	scanf("%d%d\n",&e,&f);
-	insert(list,e,f);
-	printfList(list);
+}
+
+int main(int argc, char* argv[]) {
+	int test[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	int i;
+	List list = makeEmpty();
+
+	// æ’å…¥10ä¸ªæ•´æ•°æ•°æ®å…ƒç´ 
+	for (i = 0; i < SIZE; i++) {
+		insert(list, test[i], i + 1);
+	}
+
+	printf("æ’å…¥ä¹‹åçš„é¡ºåºè¡¨å…ƒç´ ï¼š");
+	printList(list);
+
+	printf("é¡ºåºè¡¨çš„é•¿åº¦ï¼š%d\n", length(list));
+
+	int indexToDelete;
+	printf("è¯·è¾“å…¥è¦åˆ é™¤çš„åºå·ï¼ˆä»1å¼€å§‹ï¼‰ï¼š");
+	scanf("%d", &indexToDelete,1);
+	if (deleted(list, indexToDelete)) {
+		printf("åˆ é™¤åºå·ä¹‹åçš„é¡ºåºè¡¨çš„å…ƒç´ ï¼š");
+		printList(list);
+		printf("é¡ºåºè¡¨çš„é•¿åº¦ï¼š%d\n", length(list));
+	}
+	else {
+		printf("åˆ é™¤å¤±è´¥ï¼Œæ— æ•ˆçš„ç´¢å¼• %d\n", indexToDelete);
+	}
+
+	int insertIndex;
+	int insertValue;
+	printf("è¯·è¾“å…¥ä¸¤ä¸ªå€¼ï¼ˆç¬¬ä¸€ä¸ªä¸ºæ’å…¥å€¼çš„ä½ç½®ï¼Œç¬¬äºŒä¸ªä¸ºæ’å…¥å€¼çš„å…·ä½“å€¼ï¼‰ï¼š");
+	scanf("%d %d", &insertIndex, &insertValue,1);
+	if (insert(list, insertValue, insertIndex)) {
+		printf("æ’å…¥ä¹‹åé¡ºåºè¡¨çš„å…ƒç´ ï¼š");
+		printList(list);
+	}
+	else {
+		printf("æ’å…¥å¤±è´¥ï¼Œæ— æ•ˆçš„ç´¢å¼• %d\n", insertIndex);
+	}
+
 	return 0;
 }
